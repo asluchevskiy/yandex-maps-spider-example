@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-import json
 import pymongo
-import string
-import urlparse
-from utils import export_collection
+from app.utils import export_collection
 from settings import *
 
 
@@ -32,8 +29,8 @@ class Exporter(object):
             'source': 'yandex'
         }
         result = dict(yandex_id=yandex_id, name=name, urls=urls, coordinates=coordinates, phones=phones,
-                   address=address, yandex_address_details=yandex_address_details, categories=categories,
-                   hours=hours, score=score, _meta=meta, _query_meta=[query_meta])
+                      address=address, yandex_address_details=yandex_address_details, categories=categories,
+                      hours=hours, score=score, _meta=meta, _query_meta=[query_meta])
         if not self.db.result.find_one({'yandex_id': yandex_id}, {'yandex_id': 1}):
             self.db.result.save(result)
         else:
@@ -46,7 +43,7 @@ class Exporter(object):
                 for key in ('city_id', 'category_id'):
                     data['_meta'][key] = int(data['_meta'][key])
                 self._process_item(item, data['_meta'])
-                
+
     def export_json(self):
         with open(RESULT_FILE, 'w') as fw:
             export_collection(self.db.result, fw)

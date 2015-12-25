@@ -2,7 +2,16 @@
 import json
 from bson import json_util
 
+
 def fix_dot_keys(data):
+    """
+    >>> d = {'1.1': 1, '2': {'2.1': 1}}
+    >>> fix_dot_keys(d)
+    >>> sorted(d)
+    ['1_1', '2']
+    >>> sorted(d['2'])
+    ['2_1']
+    """
     for key in data.keys():
         if type(data[key]) == dict:
             fix_dot_keys(data[key])
@@ -12,10 +21,14 @@ def fix_dot_keys(data):
             del data[key]
 
 
-def export_collection(collection, fw, keys=['_id'], filter={}):
+def export_collection(collection, fw, keys=None, query=None):
+    if keys is None:
+        keys = ['_id']
+    if query is None:
+        query = {}
     fw.write('[\n')
     is_first = True
-    for item in collection.find(filter, no_cursor_timeout=True):
+    for item in collection.find(query, no_cursor_timeout=True):
         for key in keys:
             del item[key]
         if not is_first:
@@ -26,6 +39,5 @@ def export_collection(collection, fw, keys=['_id'], filter={}):
 
 
 if __name__ == '__main__':
-    d = {'1.1': 1, '2': {'2.1': {'3.1': 123}}}
-    fix_dot_keys(d)
-    print d
+    import doctest
+    doctest.testmod()

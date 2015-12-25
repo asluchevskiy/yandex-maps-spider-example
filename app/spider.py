@@ -36,11 +36,11 @@ class YandexMapsSpider(Spider):
                 if self.db.search_result.find_one({'_meta.category_id': category_id, '_meta.city_id': city_id},
                                                   {'_meta': 1}):
                     continue
-                url = r'https://maps.yandex.ru/api/search?text=' + quote(query) + \
-                      r'&chain=&lang=ru_RU&origin=maps-form&results=1000&snippets=' + \
-                      r'business%2F1.x%2Cmasstransit%2F1.x%2Cpanoramas%2F1.x%2Cbusinessrating' + \
-                      r'%2F2.x%2Cphotos%2F1.x%2Cbusinessreviews%2F1.x&' + \
-                      r'ask_direct=0&csrfToken=' + self._crsf_token
+                url = ('https://maps.yandex.ru/api/search?text={query}'
+                      '&chain=&lang=ru_RU&origin=maps-form&results=1000&snippets='
+                      'business%2F1.x%2Cmasstransit%2F1.x%2Cpanoramas%2F1.x%2Cbusinessrating'
+                      '%2F2.x%2Cphotos%2F1.x%2Cbusinessreviews%2F1.x&'
+                      r'ask_direct=0&csrfToken={crsf}').format(query=quote(query), crsf=self._crsf_token)
                 grab = self._grab.clone(url=url)
                 yield Task('search', grab=grab, _meta=dict(category_id=category_id, city_id=city_id, query=query))
 
