@@ -1,0 +1,8 @@
+grab==0.6.30
+lxml==3.5.0
+pycurl==7.19.5.3
+pymongo==3.2
+python-dateutil==2.4.2
+selection==0.0.11
+simplejson==3.8.1
+weblib==0.1.20
